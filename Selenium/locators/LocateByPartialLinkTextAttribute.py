@@ -1,15 +1,16 @@
+import time
 import unittest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-
-class CrossBrowserConfiguration(unittest.TestCase):
-    url = "https://testing-and-learning-hub.vercel.app"
+class LocateByPartialLinkTextAttribute(unittest.TestCase):
+    url = "https://www.tutorialspoint.com/selenium/practice/selenium_automation_practice.php"
     driver = None
     browser_name = "chrome"
 
@@ -24,9 +25,13 @@ class CrossBrowserConfiguration(unittest.TestCase):
         else:
             raise ValueError("Browser is not supported")
         cls.driver.maximize_window()
+        cls.driver.get(cls.url)
+        time.sleep(2)
 
-    def test_open_url(self):
-        self.driver.get(self.url)
+    def test_locate_by_partial_linktext(self):
+        element = self.driver.find_element(By.PARTIAL_LINK_TEXT, "Selenium")
+        element.click()
+        time.sleep(5)
 
     @classmethod
     def tearDownClass(cls):

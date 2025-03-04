@@ -1,6 +1,8 @@
+import time
 import unittest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -8,8 +10,8 @@ from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
-class CrossBrowserConfiguration(unittest.TestCase):
-    url = "https://testing-and-learning-hub.vercel.app"
+class LocateByClassName(unittest.TestCase):
+    url = "https://www.tutorialspoint.com/selenium/practice/selenium_automation_practice.php"
     driver = None
     browser_name = "chrome"
 
@@ -24,9 +26,12 @@ class CrossBrowserConfiguration(unittest.TestCase):
         else:
             raise ValueError("Browser is not supported")
         cls.driver.maximize_window()
+        cls.driver.get(cls.url)
 
-    def test_open_url(self):
-        self.driver.get(self.url)
+    def test_locate_by_id(self):
+        element = self.driver.find_element(By.CLASS_NAME, "name")
+        element.send_keys("Md. Ebrahim Hossain SQA Engineer")
+        time.sleep(5)
 
     @classmethod
     def tearDownClass(cls):

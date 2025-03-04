@@ -4,7 +4,7 @@ from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
 
 class FirefoxBrowserInSelenium(unittest.TestCase):
-    url = "https://www.google.com/"
+    url = "https://testing-and-learning-hub.vercel.app"
     driver = None
 
     @classmethod

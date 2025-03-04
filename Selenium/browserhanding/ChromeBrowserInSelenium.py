@@ -4,7 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import unittest
 
 class ChromeBrowserInSelenium(unittest.TestCase):
-    url = "https://www.google.com/"
+    url = "https://testing-and-learning-hub.vercel.app"
     driver = None
 
     @classmethod
