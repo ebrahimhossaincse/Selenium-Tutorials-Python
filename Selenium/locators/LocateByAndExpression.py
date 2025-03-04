@@ -33,8 +33,8 @@ def setup(request):
 
 
 @pytest.mark.usefixtures("setup")
-class TestLocateByClassAttribute:
-    def test_locate_by_class_name(self):
-        element = self.driver.find_element(By.CLASS_NAME, "btn")
-        element.click()
-        time.sleep(5)
+class TestLocateByAndExpressionXPath:
+    def test_locate_by_and_expression_xpath(self):
+        element = self.driver.find_element(By.XPATH, "//*[contains(@id,'mobile') and @placeholder='Enter your mobile number']")
+        element.send_keys("01886644261")
+        time.sleep(3)

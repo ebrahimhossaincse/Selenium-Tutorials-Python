@@ -33,8 +33,8 @@ def setup(request):
 
 
 @pytest.mark.usefixtures("setup")
-class TestLocateByClassAttribute:
-    def test_locate_by_class_name(self):
-        element = self.driver.find_element(By.CLASS_NAME, "btn")
-        element.click()
-        time.sleep(5)
+class TestLocateByStartWithXPath:
+    def test_locate_by_start_with_xpath(self):
+        element = self.driver.find_element(By.XPATH, "//*[starts-with(@id,'first')]")
+        element.send_keys("Ebrahim")
+        time.sleep(3)

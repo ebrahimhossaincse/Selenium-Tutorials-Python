@@ -1,5 +1,5 @@
 import time
-import unittest
+import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
@@ -10,32 +10,31 @@ from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
-class LocateByIDAttribute(unittest.TestCase):
-    url = "https://www.tutorialspoint.com/selenium/practice/selenium_automation_practice.php"
-    driver = None
+@pytest.fixture(scope="class")
+def setup(request):
     browser_name = "chrome"
+    url = "https://testing-and-learning-hub.vercel.app/Selenium/pages/registration_form.html"
 
-    @classmethod
-    def setUpClass(cls):
-        if cls.browser_name == "chrome":
-            cls.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-        elif cls.browser_name == "firefox":
-            cls.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
-        elif cls.browser_name == "edge":
-            cls.driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
-        else:
-            raise ValueError("Browser is not supported")
-        cls.driver.maximize_window()
-        cls.driver.get(cls.url)
+    if browser_name == "chrome":
+        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    elif browser_name == "firefox":
+        driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+    elif browser_name == "edge":
+        driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+    else:
+        raise ValueError("Browser is not supported")
 
+    driver.maximize_window()
+    driver.get(url)
+
+    request.cls.driver = driver
+    yield
+    driver.quit()
+
+
+@pytest.mark.usefixtures("setup")
+class TestLocateByIDAttribute:
     def test_locate_by_id(self):
-        element = self.driver.find_element(By.ID, "name")
+        element = self.driver.find_element(By.ID, "first-name")
         element.send_keys("Md. Ebrahim Hossain SQA Engineer")
         time.sleep(5)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
-
-if __name__ == "__main__":
-    unittest.main()

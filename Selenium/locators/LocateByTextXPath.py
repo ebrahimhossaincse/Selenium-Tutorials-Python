@@ -33,8 +33,8 @@ def setup(request):
 
 
 @pytest.mark.usefixtures("setup")
-class TestLocateByClassAttribute:
-    def test_locate_by_class_name(self):
-        element = self.driver.find_element(By.CLASS_NAME, "btn")
-        element.click()
-        time.sleep(5)
+class TestLocateByTextXPath:
+    def test_locate_by_text_xpath(self):
+        element = self.driver.find_element(By.XPATH, "//*[text()=' Learning Objectives']")
+        print("Text: ", element.text)
+        time.sleep(3)

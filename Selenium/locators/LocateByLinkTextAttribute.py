@@ -1,6 +1,5 @@
-
 import time
-import unittest
+import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
@@ -10,34 +9,29 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-
-class LocateByLinkTextAttribute(unittest.TestCase):
-    url = "https://www.tutorialspoint.com/selenium/practice/selenium_automation_practice.php"
-    driver = None
+@pytest.fixture(scope="class")
+def setup(request):  # Changed 'self' to 'request'
     browser_name = "chrome"
+    url = "https://testing-and-learning-hub.vercel.app/Selenium/pages/registration_form.html"
 
-    @classmethod
-    def setUpClass(cls):
-        if cls.browser_name == "chrome":
-            cls.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-        elif cls.browser_name == "firefox":
-            cls.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
-        elif cls.browser_name == "edge":
-            cls.driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
-        else:
-            raise ValueError("Browser is not supported")
-        cls.driver.maximize_window()
-        cls.driver.get(cls.url)
-        time.sleep(2)
+    if browser_name == "chrome":
+        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    elif browser_name == "firefox":
+        driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+    elif browser_name == "edge":
+        driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+    else:
+        raise ValueError("Browser is not supported")
 
-    def test_locate_by_linktext(self):
-        element = self.driver.find_element(By.LINK_TEXT, "Selenium Tutorial")
+    driver.maximize_window()
+    driver.get(url)
+    request.cls.driver = driver  # Assign driver to class
+    yield driver  # Yield the driver for use in tests
+    driver.quit()  # Cleanup after tests
+
+@pytest.mark.usefixtures("setup")
+class TestLocateByLinkText:
+    def test_locate_by_link_text(self):
+        element = self.driver.find_element(By.LINK_TEXT, "Back to Home")
         element.click()
-        time.sleep(5)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
-
-if __name__ == "__main__":
-    unittest.main()
+        time.sleep(5)  # Consider using WebDriverWait instead of sleep
